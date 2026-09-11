@@ -1,106 +1,195 @@
-# Water Quality Monitoring — Service MONITORING (Tâche 2 / Aya)
+# 💧 Smart Water Quality System for Water Reuse
 
-Backend **FastAPI** du module de monitoring intelligent de la qualité des
-eaux usées traitées. Ce service est **indépendant** du backend de
-l'équipe stockage (`backend_equipe_stockage`) : il ne s'y connecte **que
-via son API REST** et n'ouvre **jamais** de connexion PostgreSQL directe.
+> AI-powered platform for monitoring, storing, analyzing, and predicting water quality for water reuse applications.
+
+## 📖 Overview
+
+The **Smart Water Quality System** is a collaborative project developed during the CIRCUA summer internship. The objective is to collect real-time water quality data from IoT sensors, store and process the data, visualize it through an interactive dashboard, and apply Artificial Intelligence models to predict future water quality.
+
+The system combines:
+
+- 🌐 IoT Sensors (ESP32)
+- 📡 ThingSpeak / MQTT
+- 🗄️ Database Management
+- 📊 Interactive Dashboard
+- 🤖 AI & LSTM Prediction
+- ☁️ Cloud-ready Backend
+
+---
+
+# 🎯 Objectives
+
+- Collect real-time water quality data.
+- Store raw sensor measurements.
+- Build datasets for scientific studies.
+- Monitor water quality through dashboards.
+- Generate alerts for abnormal values.
+- Predict future water quality using AI models.
+
+---
+
+# 🏗️ Repository Structure
 
 ```
-Frontend (Next.js, :3001)
-        │  HTTP / WebSocket
-        ▼
-Service MONITORING (FastAPI, :8001)   <-- CE PROJET
-        │  HTTP uniquement (storage_client.py)
-        ▼
-Backend STOCKAGE (FastAPI, :8000) ──── PostgreSQL
+Projet-IA-Water-Reuse-CIRCUA/
+
+│
+├── backend/
+├── frontend/
+├── database/
+├── ai/
+├── docs/
+├── datasets/
+├── mqtt/
+├── docker/
+└── README.md
 ```
 
-## 1. Installation
+---
+
+# 🌿 Git Workflow
+
+The repository follows a collaborative Git workflow.
+
+```
+main
+│
+└── develop
+    ├── step-1
+    ├── step-2
+    ├── step-3
+    └── step-4
+```
+
+### Branch Description
+
+| Branch | Purpose |
+|---------|---------|
+| main | Stable production version |
+| develop | Integration branch |
+| step-1 | Data acquisition & storage |
+| step-2 | Monitoring dashboard & alerts |
+| step-3 | AI prediction (LSTM) |
+| step-4 | Additional project development |
+
+---
+
+# 📋 Project Steps
+
+## ✅ Step 1 — Data Storage & Preprocessing
+
+Responsible for:
+
+- Real-time sensor data collection
+- Database design
+- Data preprocessing
+- Study dataset generation
+- ThingSpeak API integration
+- MQTT communication (optional)
+
+---
+
+## ✅ Step 2 — Monitoring Dashboard
+
+Responsible for:
+
+- Dashboard development
+- Real-time visualization
+- Historical data
+- Alerts
+- Multi-sensor comparison
+
+---
+
+## ✅ Step 3 — AI Prediction
+
+Responsible for:
+
+- Dataset preparation
+- LSTM implementation
+- Water quality forecasting
+- Model evaluation
+
+---
+
+## ✅ Step 4 — System Integration
+
+Responsible for:
+
+- Integration of all modules
+- Testing
+- Optimization
+- Deployment support
+- Documentation
+
+---
+
+# 🛠️ Technologies
+
+- Python
+- FastAPI / Flask
+- PostgreSQL
+- MQTT
+- ESP32
+- ThingSpeak
+- Pandas
+- TensorFlow / Keras
+- LSTM
+- Docker
+- Git & GitHub
+
+---
+
+# 📊 Sensor Parameters
+
+The system processes:
+
+- pH
+- Temperature
+- Electrical Conductivity (EC)
+- Turbidity
+- Dissolved Oxygen (DO)
+
+---
+
+# 🚀 Getting Started
+
+Clone the repository
 
 ```bash
-cd monitoring_backend
-python -m venv venv
-source venv/bin/activate          # Windows : venv\Scripts\activate
-pip install -r requirements.txt
+git clone https://github.com/<username>/Projet-IA-Water-Reuse-CIRCUA-.git
 ```
 
-## 2. Configuration
+Enter the project
 
 ```bash
-copy .env.example .env            # Windows
-cp .env.example .env              # macOS/Linux
+cd Projet-IA-Water-Reuse-CIRCUA-
 ```
 
-La seule variable réellement critique est `STORAGE_API_BASE_URL` : elle
-doit pointer vers le backend de l'équipe stockage (par défaut
-`http://localhost:8000`). **Ce service ne doit jamais recevoir de
-`DATABASE_URL`** — s'il n'a aucune donnée à afficher, vérifiez d'abord
-que le backend stockage tourne bien sur le port configuré.
-
-## 3. Lancement
+Switch to the development branch
 
 ```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
+git checkout develop
 ```
 
-Documentation interactive : http://localhost:8001/docs
+---
 
-Healthcheck général : `GET /` — vérifie que l'API stockage est bien
-joignable : `GET /health/storage`.
+# 🤝 Collaboration Rules
 
-## 4. Organisation du code
+- Work only on your assigned **step** branch.
+- Create Pull Requests into **develop**.
+- Do not push directly to **main**.
+- Keep commits small and descriptive.
+- Review code before merging.
 
-```
-app/
-  main.py               Point d'entrée FastAPI + WebSocket /ws/live
-  config.py             Configuration (.env)
-  norms_config.py       Seuils de conformité MA/EU (À VALIDER, cf. en-tête du fichier)
-  storage_client.py     SEULE couche d'accès aux données (HTTP vers l'API stockage)
-  poller.py             Boucle de fond : détecte les nouvelles mesures, pousse en WebSocket
-  routes/
-    raw_data.py          Monitoring temps réel + historique + conformité (module 1)
-    analytics.py          Statistiques globales + EDA : histogramme/corrélation/boxplot/timeline (modules 2-3)
-    anomalies.py           Détection intelligente (Z-score/Isolation Forest/Autoencoder) + drift + comparaison sets (modules 4-5)
-    alerts.py                Alertes captures nulles (proxy stockage) + Journal/calendrier (modules 5-6)
-    studies.py                 Études, cycles, comparaison IN vs OUT_CONTROL vs OUT_PLANT (ANOVA/Tukey/PCA) (modules 4/7/8)
-    export.py                   Tableau de données complet + export CSV (module 9)
-  services/
-    calculations.py       Stats descriptives, corrélations, IQR/Z-score, moyenne mobile, qualité des données
-    anomaly_service.py    Z-score, Isolation Forest, Autoencoder (MLPRegressor bottleneck), drift KS-test
-    comparison_service.py IN/OUT_CONTROL/OUT_PLANT : descriptif, ANOVA+Tukey, PCA ; comparaison SET1 vs SET2
-    journal_service.py    Agrégation des alertes par jour civil (calendrier)
-```
+---
 
-## 5. Correspondance avec le cahier des charges
+# 📄 License
 
-| Module du CdC                                   | Endpoints                                    |
-|--------------------------------------------------|-----------------------------------------------|
-| 1. Monitoring temps réel + normes                | `/api/monitoring/raw-data/*`                  |
-| 2. Statistiques globales                          | `/api/monitoring/analytics/global-stats`      |
-| 3. Analyse scientifique (histo/corr/boxplot/...)  | `/api/monitoring/analytics/*`                 |
-| 4. Comparaison sets & IN/OUT_CONTROL/OUT_PLANT    | `/api/monitoring/anomalies/compare-sets`, `/api/monitoring/studies/{id}/comparison/*` |
-| 5. Alertes (anomalies + captures nulles)          | `/api/monitoring/anomalies/*`, `/api/monitoring/alerts/*` |
-| 6. Journal (calendrier)                           | `/api/monitoring/alerts/calendar*`            |
-| 7. Qualité de l'eau                               | `/api/monitoring/raw-data/quality-report` + `/norms` |
-| 8. Études & Cycles                                | `/api/monitoring/studies/*`                   |
-| 9. Tableau de données + export                    | `/api/monitoring/data-table*`                 |
+This project is developed for academic and research purposes as part of the CIRCUA Summer Internship.
 
-## 6. Points d'attention / pistes d'amélioration (à discuter avec le chef de projet)
+---
 
-- **Seuils de conformité (Maroc/Europe)** : `app/norms_config.py` contient
-  des valeurs **indicatives** (sourcées en en-tête du fichier), aucune
-  valeur officielle n'ayant été fournie. À faire valider puis, idéalement,
-  à rendre éditables depuis l'UI (comme le seuil de captures nulles côté
-  stockage).
-- **Anomalies (Isolation Forest / Autoencoder)** : modèles ré-entraînés
-  à la volée sur la fenêtre de données demandée (pas de persistance de
-  modèle/checkpoints pour cette v1 — cf. besoin fonctionnel D du CdC sur
-  les checkpoints, à prévoir pour le module de prévision LSTM, non traité
-  ici car hors périmètre "monitoring" au sens strict).
-- **Filtrage par date sur `raw-data`** : l'API stockage ne filtre pas
-  nativement par date ; `storage_client.fetch_raw_data_range()` pagine et
-  filtre côté monitoring (garde-fous `STORAGE_PAGE_SIZE`/`STORAGE_MAX_PAGES`
-  dans `config.py` à ajuster si le volume de données grossit beaucoup).
-- **Prévisions LSTM** (module D du CdC) : non implémentées dans ce lot
-  (dashboard des modules 1 à 9 demandés) — à ajouter dans un module
-  `forecast_service.py` séparé si besoin.
+# 👥 Contributors
+
+Developed collaboratively by the CIRCUA internship team.

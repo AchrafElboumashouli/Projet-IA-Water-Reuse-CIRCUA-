@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+html, body {
+  background-color: #05100f;
+  color: #e6f4f1;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #0a1817; }
+::-webkit-scrollbar-thumb { background: #204a44; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #2dd4bf; }
+
+.card {
+  @apply bg-ink-900/80 border border-ink-700 rounded-2xl shadow-glow backdrop-blur-sm;
+}
+
+.card-header {
+  @apply flex items-center justify-between px-5 py-4 border-b border-ink-700;
+}
+
+.pill {
+  @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
+}
+
+.stat-value {
+  @apply font-mono text-2xl font-semibold tracking-tight;
+}
+
+.nav-link {
+  @apply flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-ink-600/90 transition-colors hover:bg-ink-800 hover:text-aqua-400;
+}
+
+.nav-link.active {
+  @apply bg-ink-800 text-aqua-400 shadow-glow;
+}
+
+.input {
+  @apply rounded-lg border border-ink-600 bg-ink-800 px-3 py-1.5 text-sm text-white outline-none focus:border-aqua-500;
+}
+
+.btn {
+  @apply inline-flex items-center gap-2 rounded-lg bg-aqua-600 px-3 py-1.5 text-sm font-medium text-ink-950 transition hover:bg-aqua-500 disabled:opacity-40;
+}
+
+.btn-ghost {
+  @apply inline-flex items-center gap-2 rounded-lg border border-ink-600 px-3 py-1.5 text-sm font-medium text-ink-600 transition hover:border-aqua-500 hover:text-aqua-400;
+}

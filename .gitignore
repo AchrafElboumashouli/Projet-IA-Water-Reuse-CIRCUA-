@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 venv/
 __pycache__/
 *.pyc
 logs/
 .env
+=======
+node_modules/
+.next/
+.env.local
+*.log
+>>>>>>> dd3e2b9c6d8f5ee5da032d426d75a34590161722
