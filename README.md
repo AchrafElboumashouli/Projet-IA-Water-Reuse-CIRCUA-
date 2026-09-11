@@ -1,73 +1,195 @@
-# Water Quality Monitoring — Dashboard MONITORING (Frontend)
+# 💧 Smart Water Quality System for Water Reuse
 
-Frontend **Next.js 14 + TypeScript + TailwindCSS + Plotly.js** du
-dashboard de monitoring intelligent de la qualité des eaux usées
-traitées. Consomme exclusivement le service `monitoring_backend`
-(FastAPI, port 8001 par défaut) — jamais l'API stockage directement.
+> AI-powered platform for monitoring, storing, analyzing, and predicting water quality for water reuse applications.
 
-## 1. Installation
+## 📖 Overview
+
+The **Smart Water Quality System** is a collaborative project developed during the CIRCUA summer internship. The objective is to collect real-time water quality data from IoT sensors, store and process the data, visualize it through an interactive dashboard, and apply Artificial Intelligence models to predict future water quality.
+
+The system combines:
+
+- 🌐 IoT Sensors (ESP32)
+- 📡 ThingSpeak / MQTT
+- 🗄️ Database Management
+- 📊 Interactive Dashboard
+- 🤖 AI & LSTM Prediction
+- ☁️ Cloud-ready Backend
+
+---
+
+# 🎯 Objectives
+
+- Collect real-time water quality data.
+- Store raw sensor measurements.
+- Build datasets for scientific studies.
+- Monitor water quality through dashboards.
+- Generate alerts for abnormal values.
+- Predict future water quality using AI models.
+
+---
+
+# 🏗️ Repository Structure
+
+```
+Projet-IA-Water-Reuse-CIRCUA/
+
+│
+├── backend/
+├── frontend/
+├── database/
+├── ai/
+├── docs/
+├── datasets/
+├── mqtt/
+├── docker/
+└── README.md
+```
+
+---
+
+# 🌿 Git Workflow
+
+The repository follows a collaborative Git workflow.
+
+```
+main
+│
+└── develop
+    ├── step-1
+    ├── step-2
+    ├── step-3
+    └── step-4
+```
+
+### Branch Description
+
+| Branch | Purpose |
+|---------|---------|
+| main | Stable production version |
+| develop | Integration branch |
+| step-1 | Data acquisition & storage |
+| step-2 | Monitoring dashboard & alerts |
+| step-3 | AI prediction (LSTM) |
+| step-4 | Additional project development |
+
+---
+
+# 📋 Project Steps
+
+## ✅ Step 1 — Data Storage & Preprocessing
+
+Responsible for:
+
+- Real-time sensor data collection
+- Database design
+- Data preprocessing
+- Study dataset generation
+- ThingSpeak API integration
+- MQTT communication (optional)
+
+---
+
+## ✅ Step 2 — Monitoring Dashboard
+
+Responsible for:
+
+- Dashboard development
+- Real-time visualization
+- Historical data
+- Alerts
+- Multi-sensor comparison
+
+---
+
+## ✅ Step 3 — AI Prediction
+
+Responsible for:
+
+- Dataset preparation
+- LSTM implementation
+- Water quality forecasting
+- Model evaluation
+
+---
+
+## ✅ Step 4 — System Integration
+
+Responsible for:
+
+- Integration of all modules
+- Testing
+- Optimization
+- Deployment support
+- Documentation
+
+---
+
+# 🛠️ Technologies
+
+- Python
+- FastAPI / Flask
+- PostgreSQL
+- MQTT
+- ESP32
+- ThingSpeak
+- Pandas
+- TensorFlow / Keras
+- LSTM
+- Docker
+- Git & GitHub
+
+---
+
+# 📊 Sensor Parameters
+
+The system processes:
+
+- pH
+- Temperature
+- Electrical Conductivity (EC)
+- Turbidity
+- Dissolved Oxygen (DO)
+
+---
+
+# 🚀 Getting Started
+
+Clone the repository
 
 ```bash
-cd monitoring_frontend
-npm install
+git clone https://github.com/<username>/Projet-IA-Water-Reuse-CIRCUA-.git
 ```
 
-## 2. Configuration
-
-Créer un fichier `.env.local` (optionnel, valeurs par défaut déjà
-correctes en développement local) :
-
-```
-NEXT_PUBLIC_MONITORING_API_URL=http://localhost:8001
-NEXT_PUBLIC_MONITORING_WS_URL=ws://localhost:8001/ws/live
-```
-
-## 3. Lancement
+Enter the project
 
 ```bash
-npm run dev
+cd Projet-IA-Water-Reuse-CIRCUA-
 ```
 
-Dashboard disponible sur http://localhost:3001
-
-**Prérequis** : le service `monitoring_backend` (port 8001) doit tourner,
-lui-même connecté au backend stockage (port 8000). Sans eux, les pages
-affichent un état "Erreur de connexion à l'API monitoring" plutôt que de
-planter.
-
-## 4. Pages du dashboard
-
-| Route            | Contenu                                                             |
-|-------------------|----------------------------------------------------------------------|
-| `/`                | Monitoring temps réel + historique, cartes de conformité, flux WebSocket |
-| `/statistiques`    | Statistiques globales (min/max/moyenne/écart-type/quartiles)         |
-| `/analyse`          | Analyse scientifique : histogrammes, corrélations (heatmap), boxplots, timeline |
-| `/comparaison`       | SET 1 vs SET 2 (+ dérive KS-test) et IN vs OUT_CONTROL vs OUT_PLANT (ANOVA+Tukey, removal %) |
-| `/alertes`            | Anomalies intelligentes (Z-score/Isolation Forest/Autoencoder) + captures nulles consécutives |
-| `/journal`             | Calendrier des jours avec alerte (rouge = alerte), détail au clic     |
-| `/qualite`              | Taux de conformité aux normes + rapport de qualité des données        |
-| `/etudes`                | Études, cycles de laboratoire (formulaire 24 lignes + import Excel)   |
-| `/donnees`                | Tableau complet des mesures + export CSV (tout ou période précise)    |
-
-## 5. Notes techniques
-
-- **Plotly.js** est chargé via `plotly.js-dist-min` (bundle navigateur
-  pré-compilé) plutôt que le paquet `plotly.js` complet, pour éviter les
-  soucis de résolution de modules Node (`buffer/`, etc.) par le bundler
-  de Next.js. Voir `components/PlotlyChart.tsx`.
-- **Export PNG** : chaque graphe du monitoring temps réel a un bouton de
-  téléchargement PNG (`Plotly.downloadImage`) et un bouton CSV/Excel
-  (les fichiers CSV s'ouvrent nativement dans Excel).
-- **Flux temps réel** : `hooks/useLiveSocket.ts` se connecte à
-  `/ws/live` avec reconnexion automatique (5s) si le service monitoring
-  redémarre.
-- **Design** : palette sombre "salle de contrôle" (teal/aqua sur fond
-  slate profond), typographie mono pour les valeurs numériques —
-  volontairement différente d'un template SaaS générique.
-
-## 6. Build production
+Switch to the development branch
 
 ```bash
-npm run build
-npm run start   # sert sur le port 3001
+git checkout develop
 ```
+
+---
+
+# 🤝 Collaboration Rules
+
+- Work only on your assigned **step** branch.
+- Create Pull Requests into **develop**.
+- Do not push directly to **main**.
+- Keep commits small and descriptive.
+- Review code before merging.
+
+---
+
+# 📄 License
+
+This project is developed for academic and research purposes as part of the CIRCUA Summer Internship.
+
+---
+
+# 👥 Contributors
+
+Developed collaboratively by the CIRCUA internship team.
